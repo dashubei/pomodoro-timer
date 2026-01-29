@@ -61,7 +61,7 @@ html {
   height: 100%;
 }
 
-body {
+#app {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
     sans-serif;
@@ -69,16 +69,10 @@ body {
   color: var(--color-text);
   min-height: 100vh;
   min-height: 100svh;
-  overflow: auto;
   margin: 0;
-}
-
-#app {
   width: 100%;
   display: grid;
   place-items: center;
-  height: 100vh;
-  height: 100svh;
 }
 
 /* Card Container */
@@ -502,11 +496,9 @@ h2 {
 
 /* Responsive */
 @media (max-width: 480px) {
-  body {
+  #app {
     padding: 0.5rem;
-    align-items: flex-start;
   }
-
   .card {
     padding: 1.5rem;
   }
