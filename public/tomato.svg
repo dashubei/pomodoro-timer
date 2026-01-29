@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="tomatoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c"/>
+      <stop offset="100%" style="stop-color:#c0392b"/>
+    </linearGradient>
+  </defs>
+  <!-- ���n,S -->
+  <ellipse cx="50" cy="55" rx="40" ry="38" fill="url(#tomatoGrad)"/>
+  <!-- Ϥ�� -->
+  <ellipse cx="35" cy="45" rx="12" ry="8" fill="rgba(255,255,255,0.2)"/>
+  <!-- x_ -->
+  <path d="M50 22 L45 18 Q40 12 35 15 L40 22 Q45 25 50 22 Q55 25 60 22 L65 15 Q60 12 55 18 Z" fill="#27ae60"/>
+  <!--  -->
+  <rect x="48" y="12" width="4" height="10" rx="2" fill="#219a52"/>
+</svg>
