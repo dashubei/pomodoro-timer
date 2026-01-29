@@ -25,6 +25,14 @@ let timer: PomodoroTimer;
 let app: HTMLDivElement;
 
 /**
+ * タイマー画面のみスクロールをロック
+ */
+function setScrollLocked(locked: boolean): void {
+  document.documentElement.classList.toggle("no-scroll", locked);
+  document.body.classList.toggle("no-scroll", locked);
+}
+
+/**
  * テーマを適用
  */
 function applyTheme(themeMode: ThemeMode): void {
@@ -59,6 +67,7 @@ function init(): void {
  * 設定画面のHTML生成
  */
 function renderSettingsScreen(settings: PomodoroSettings): void {
+  setScrollLocked(false);
   app.innerHTML = `
     <div class="card screen">
       <h1>🍅 ポモドーロタイマー</h1>
@@ -141,16 +150,28 @@ function renderSettingsScreen(settings: PomodoroSettings): void {
   ) as HTMLInputElement;
   notificationToggle.addEventListener("change", async () => {
     if (notificationToggle.checked) {
+      // iOSの場合、ホーム画面に追加していないと通知が使えない
+      if (notification.isIOS() && !notification.isStandalone()) {
+        alert(
+          "iOSで通知を利用するには、ホーム画面への追加が必要です。\n\n" +
+            "1. ブラウザの共有ボタンをタップ\n" +
+            "2. 「ホーム画面に追加」を選択\n" +
+            "3. 追加されたアイコンからアプリを起動\n" +
+            "4. 改めて設定から通知をオンにしてください",
+        );
+        notificationToggle.checked = false;
+        return;
+      }
+
       const granted = await notification.requestPermission();
       if (!granted) {
         notificationToggle.checked = false;
         // iOSの場合、より詳細なガイダンスを提供
-        const isIOS =
-          /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-          (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-        if (isIOS) {
+        if (notification.isIOS()) {
           alert(
-            "iOSでは通知許可のポップアップが表示されない場合があります。\n\n設定 > Safari > このサイト > 通知 から手動で許可してください。\n\n（Chromeを使用している場合も、iOSではSafariの設定を確認してください）",
+            "通知の許可が得られませんでした。\n\n" +
+              "iOSの設定 > 下にスクロールして対象のアプリ（またはSafari/Chrome） > 通知\n" +
+              "から手動で許可を確認してください。",
           );
         } else {
           alert("通知の許可が必要です。ブラウザの設定から許可してください。");
@@ -256,6 +277,7 @@ function getInputValue(id: string, defaultValue: number): number {
  * タイマー画面のHTML生成
  */
 function renderTimerScreen(): void {
+  setScrollLocked(true);
   const state = timer.getState();
   const settings = timer.getSettings();
 
@@ -525,6 +547,7 @@ function updatePausedIndicator(isPaused: boolean): void {
  * 完了画面のHTML生成
  */
 function renderCompleteScreen(): void {
+  setScrollLocked(false);
   document.removeEventListener("keydown", handleKeyDown);
   const settings = timer.getSettings();
 

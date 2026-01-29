@@ -59,7 +59,6 @@
 html {
   font-size: 16px;
   height: 100%;
-  overflow: hidden;
 }
 
 body {
@@ -68,8 +67,8 @@ body {
     sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,10 +79,6 @@ body {
 #app {
   width: 100%;
   max-width: 480px;
-  max-height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Card Container */
@@ -100,10 +95,16 @@ body {
   flex-direction: column;
 }
 
-/* タイマー画面ではスクロールを完全に無効化 */
-.timer-screen {
+/* タイマー画面だけページスクロールを無効化 */
+html.no-scroll,
+body.no-scroll {
+  height: 100%;
   overflow: hidden;
-  max-height: calc(100vh - 2rem);
+}
+
+/* タイマー画面（カード内）ではスクロールを無効化 */
+.card.timer-screen {
+  overflow: hidden;
 }
 
 /* Typography */
@@ -501,6 +502,7 @@ h2 {
 @media (max-width: 480px) {
   body {
     padding: 0.5rem;
+    align-items: flex-start;
   }
 
   .card {

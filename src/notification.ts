@@ -16,10 +16,21 @@ export class NotificationManager {
   /**
    * iOSデバイスかどうかを判定
    */
-  private isIOS(): boolean {
+  public isIOS(): boolean {
     return (
       /iPad|iPhone|iPod/.test(navigator.userAgent) ||
       (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+    );
+  }
+
+  /**
+   * PWAとしてインストールされているか（スタンドアローンモードか）判定
+   */
+  public isStandalone(): boolean {
+    return (
+      ("standalone" in window.navigator &&
+        (window.navigator as any).standalone) ||
+      window.matchMedia("(display-mode: standalone)").matches
     );
   }
 
