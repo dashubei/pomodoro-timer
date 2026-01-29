@@ -144,7 +144,17 @@ function renderSettingsScreen(settings: PomodoroSettings): void {
       const granted = await notification.requestPermission();
       if (!granted) {
         notificationToggle.checked = false;
-        alert("通知の許可が必要です。ブラウザの設定から許可してください。");
+        // iOSの場合、より詳細なガイダンスを提供
+        const isIOS =
+          /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+          (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+        if (isIOS) {
+          alert(
+            "iOSでは通知許可のポップアップが表示されない場合があります。\n\n設定 > Safari > このサイト > 通知 から手動で許可してください。\n\n（Chromeを使用している場合も、iOSではSafariの設定を確認してください）",
+          );
+        } else {
+          alert("通知の許可が必要です。ブラウザの設定から許可してください。");
+        }
       }
     }
   });
@@ -165,7 +175,7 @@ function renderSettingsScreen(settings: PomodoroSettings): void {
 /**
  * フォーム送信処理
  */
-function handleFormSubmit(e: Event): void {
+async function handleFormSubmit(e: Event): Promise<void> {
   e.preventDefault();
 
   const settings = getFormSettings();
@@ -183,9 +193,18 @@ function handleFormSubmit(e: Event): void {
   // AudioContextを初期化（ユーザー操作後）
   audio.init();
 
-  // 通知許可をリクエスト
+  // 通知許可をリクエスト（ユーザー操作のコンテキスト内で）
   if (settings.notificationEnabled) {
-    notification.requestPermission();
+    // 許可状態を確認して、必要に応じてリクエスト
+    if (!notification.hasPermission()) {
+      const granted = await notification.requestPermission();
+      if (!granted) {
+        // 許可が得られなかった場合、設定を無効化
+        settings.notificationEnabled = false;
+        storage.saveSettings(settings);
+        notification.setEnabled(false);
+      }
+    }
   }
 
   // タイマー画面を表示
