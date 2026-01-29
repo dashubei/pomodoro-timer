@@ -17,9 +17,21 @@ export class AudioManager {
   /**
    * AudioContextを初期化（ユーザー操作後に呼び出す）
    */
-  init(): void {
+  async init(): Promise<void> {
     if (!this.audioContext) {
-      this.audioContext = new AudioContext();
+      const AudioContextClass =
+        window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContextClass) {
+        this.audioContext = new AudioContextClass();
+      }
+    }
+
+    if (this.audioContext && this.audioContext.state === "suspended") {
+      try {
+        await this.audioContext.resume();
+      } catch (error) {
+        console.error("AudioContext resume failed:", error);
+      }
     }
   }
 
@@ -49,7 +61,7 @@ export class AudioManager {
    */
   play(type: SoundType): void {
     if (!this.enabled) return;
-    this.init();
+    this.init().catch((e) => console.error("Audio init failed:", e));
     if (!this.audioContext) return;
 
     switch (type) {

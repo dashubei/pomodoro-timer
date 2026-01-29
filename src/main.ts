@@ -104,6 +104,9 @@ function renderSettingsScreen(settings: PomodoroSettings): void {
             <span class="toggle-slider"></span>
           </label>
         </div>
+        <p style="margin-top: -0.5rem; margin-bottom: 1rem; font-size: 0.75rem; color: var(--text-secondary);">
+          ※iPhone等はマナーモード解除が必要です
+        </p>
         
         <div class="toggle-group">
           <span class="toggle-label">🔔 ブラウザ通知</span>
@@ -137,9 +140,9 @@ function renderSettingsScreen(settings: PomodoroSettings): void {
   const soundToggle = document.getElementById(
     "sound-enabled",
   ) as HTMLInputElement;
-  soundToggle.addEventListener("change", () => {
+  soundToggle.addEventListener("change", async () => {
     if (soundToggle.checked) {
-      audio.init();
+      await audio.init();
       audio.playTest();
     }
   });
@@ -212,7 +215,7 @@ async function handleFormSubmit(e: Event): Promise<void> {
   notification.setEnabled(settings.notificationEnabled);
 
   // AudioContextを初期化（ユーザー操作後）
-  audio.init();
+  await audio.init();
 
   // 通知許可をリクエスト（ユーザー操作のコンテキスト内で）
   if (settings.notificationEnabled) {
