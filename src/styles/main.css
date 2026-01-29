@@ -68,17 +68,17 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
+  min-height: 100svh;
   overflow: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
   margin: 0;
 }
 
 #app {
   width: 100%;
-  max-width: 480px;
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  height: 100svh;
 }
 
 /* Card Container */
@@ -93,6 +93,8 @@ body {
   max-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 480px;
 }
 
 /* タイマー画面だけページスクロールを無効化 */
@@ -507,11 +509,9 @@ h2 {
 
   .card {
     padding: 1.5rem;
-    max-height: calc(100vh - 1rem);
   }
 
   .timer-screen {
-    max-height: calc(100vh - 1rem);
     padding: 1rem;
   }
 
